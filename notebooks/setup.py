@@ -25,6 +25,9 @@ class Env:
         self.DATA_PATH = self.PROJECT_PATH / "data"
         self.OUTPUT_PATH = self.PROJECT_PATH / "output"
         self.CHECKPOINT_PATH = self.PROJECT_PATH / "checkpoints"
+        
+        os.mkdir(self.OUTPUT_PATH, exist_ok=True)
+        os.mkdir(self.CHECKPOINT_PATH, exist_ok=True)
 
         print(f"Environment loaded. Project path: {self.PROJECT_PATH}")
 
