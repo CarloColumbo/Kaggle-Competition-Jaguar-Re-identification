@@ -208,3 +208,5 @@ __marimo__/
 
 data/
 notebooks/wandb/
+# Exclude model checkpoints
+*.pth
