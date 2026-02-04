@@ -73,19 +73,3 @@ def create_deterministic_training_dataloader(dataset, batch_size, shuffle=True, 
         generator=generator if shuffle else None,
         **kwargs
     )
-
-def get_train_val_split(split_file_path: str = None) -> dict:
-    """
-    Load the train-validation split from a pickle file.
-
-    Args:
-        split_file_path (str or Path): Path to the pickle file containing the split.
-
-    Returns:
-        dict: Dictionary containing "train" and "validation" keys with corresponding image paths.
-    """
-    if split_file_path is None:
-        split_file_path = Path(__file__).parent / "train_val_split.pkl"
-
-    with open(split_file_path, "rb") as f:
-        return pickle.load(f)

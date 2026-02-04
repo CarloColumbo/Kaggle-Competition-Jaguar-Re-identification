@@ -25,9 +25,11 @@ class Env:
         self.DATA_PATH = self.PROJECT_PATH / "data"
         self.OUTPUT_PATH = self.PROJECT_PATH / "output" / experiment_name
         self.CHECKPOINT_PATH = self.PROJECT_PATH / "checkpoints" / experiment_name
+        self.EMBEDDINGS_PATH = self.CHECKPOINT_PATH / "embeddings"
         
         self.OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
         self.CHECKPOINT_PATH.mkdir(parents=True, exist_ok=True)
+        self.EMBEDDINGS_PATH.mkdir(parents=True, exist_ok=True)
 
         print(f"Environment loaded. Project path: {self.PROJECT_PATH}")
 
