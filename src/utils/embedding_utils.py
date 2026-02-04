@@ -82,9 +82,9 @@ def _load_cached_embeddings(
 def get_embeddings(
     model: BaseModel,
     image_paths: list[str],
-    cache_path: Path,
-    batch_size: int,
     device: str,
+    batch_size: int,
+    cache_path: Path = None,
     desc: str = "Extracting embeddings"
 ) -> np.ndarray:
     """
@@ -92,15 +92,15 @@ def get_embeddings(
     Args:
         model (BaseModel): The model used to extract embeddings.
         image_paths (list[str]): List of image file paths.
-        cache_path (Path): Path to the cache file.
-        batch_size (int): Number of images to process in a batch.
         device (str): Device to run the model on (e.g., 'cpu' or 'cuda').
+        batch_size (int): Number of images to process in a batch.
+        cache_path (Path, optional): Path to cache file for embeddings. If None, caching is disabled.
         desc (str): Description for the progress bar.
     Returns:
         np.ndarray: Array of extracted embeddings.
     """
     embeddings = None
-    if cache_path.exists():
+    if cache_path and cache_path.exists():
         embeddings = _load_cached_embeddings(cache_path, image_paths)
         if embeddings is not None:
             print(f"Loaded cached embeddings from {cache_path}")
@@ -115,11 +115,12 @@ def get_embeddings(
             device=device,
             desc=desc
         )
-        np.savez_compressed(
-            cache_path,
-            embeddings=embeddings,
-            filenames=np.array(image_paths, dtype=object)
-        )
-        print(f"Saved embeddings to cache at {cache_path}")
+        if cache_path:
+            np.savez_compressed(
+                cache_path,
+                embeddings=embeddings,
+                filenames=np.array(image_paths, dtype=object)
+            )
+            print(f"Saved embeddings to cache at {cache_path}")
 
     return embeddings

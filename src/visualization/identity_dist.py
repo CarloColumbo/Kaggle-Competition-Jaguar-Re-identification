@@ -1,14 +1,18 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import wandb
 
 
-def visualize_identity_distribution(identity_counts: pd.Series) -> plt.Figure:
+def visualize_identity_distribution(identity_counts: pd.Series, log: bool = True) -> plt.Figure:
     """
     Visualizes the distribution of images per jaguar identity in the training dataset.
     Logs the visualization to Weights & Biases (W&B).
 
     Args:
         identity_counts (pd.Series): Series with counts of images per jaguar identity.
+        log (bool): Whether to log the figure to W&B. Default is True.
+    Returns:
+        plt.Figure: The generated matplotlib figure.
     """
 
     fig, ax = plt.subplots(figsize=(14, 5))
@@ -22,5 +26,8 @@ def visualize_identity_distribution(identity_counts: pd.Series) -> plt.Figure:
     plt.tight_layout()
     
     plt.show()
+    
+    if log:
+        wandb.log({"identity_distribution_full": wandb.Image(fig)})
 
     return fig

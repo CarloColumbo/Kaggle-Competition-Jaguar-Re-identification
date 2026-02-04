@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from src.models.embedding_projection import EmbeddingProjection
+from src.models.base_model import BaseModel
 
 
 class ArcFaceLayer(nn.Module):
@@ -76,13 +77,18 @@ class ArcFaceLayer(nn.Module):
         return output
 
 
-class ArcFaceModel(nn.Module):
+class ArcFaceModel(BaseModel):
     """
     Complete model: Embedding Projection + ArcFace.
     """
     
     def __init__(self, input_dim, num_classes, embedding_dim=256, hidden_dim=512, margin=0.5, scale=64.0, dropout=0.3):
         super().__init__()
+        self._input_dim = input_dim
+        self._num_classes = num_classes
+        self._embedding_dim = embedding_dim
+        self._hidden_dim = hidden_dim
+
         self.embedding_net = EmbeddingProjection(
             input_dim=input_dim, 
             hidden_dim=hidden_dim,
@@ -106,3 +112,19 @@ class ArcFaceModel(nn.Module):
         """Get normalized embeddings for inference."""
         embeddings = self.embedding_net(x)
         return F.normalize(embeddings, p=2, dim=1)
+    
+    def get_embedding_size(self) -> int:
+        return self._embedding_dim
+    
+    def print_model_summary(self):
+        print(f"ArcFace Model:")
+        self.embedding_net.print_model_summary()
+        print(f"  Num classes: {self._num_classes}")
+        print(f"  ArcFace margin: {self.arcface.margin}")
+
+        print(f"  ArcFace scale: {self.arcface.scale}")
+        print(f"  Total parameters: {self.get_number_of_parameters():,}")
+        
+    @staticmethod
+    def get_model_name() -> str:
+        return "ArcFaceModel"

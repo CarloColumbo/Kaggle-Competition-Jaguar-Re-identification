@@ -3,6 +3,9 @@ import numpy as np
 from tqdm import tqdm
 from pathlib import Path
 
+from src.utils.embedding_utils import get_embeddings
+from src.models.base_model import BaseModel
+
 
 def get_test_pairs(data_path: Path, info: bool = True) -> pd.DataFrame:
     """
@@ -111,3 +114,54 @@ def create_submission_dataframe(
         print(f"  Our rows: {len(submission_df)}")
         
     return submission_df
+
+
+def prepare_submission_file(
+    model: BaseModel,
+    data_path: Path,
+    submission_path: Path,
+    device: str,
+    batch_size: int,
+):
+    """
+    Prepare the submission file for the competition.
+    Args:
+        model (BaseModel): The model used to extract embeddings.
+        data_path (Path): Path to the data directory.
+        submission_path (Path): Path to save the submission file.
+        device (str): Device to run the model on (e.g., 'cpu' or 'cuda').
+        batch_size (int): Number of images to process in a batch.
+    """
+    test_pairs_df = get_test_pairs(data_path)
+    test_images = get_test_images(test_pairs_df)
+    test_image_paths = [data_path / "test" / filename for filename in test_images]
+    
+    print(f"\nExtracting MegaDescriptor embeddings for test images...")
+    test_embeddings = get_embeddings(
+        model,
+        test_image_paths,
+        device=device,
+        batch_size=batch_size,
+        desc="Test embeddings"
+    )
+    print(f"Test embeddings shape: {test_embeddings.shape}")
+
+    # Create mapping from filename to embedding
+    img_to_embedding = {
+        filename: embedding 
+        for filename, embedding in zip(test_images, test_embeddings)
+    }
+    
+    similarities = compute_pairwise_similarities(test_pairs_df, img_to_embedding)
+    
+    submission_df = create_submission_dataframe(
+        test_pairs_df,
+        similarities,
+        data_path,
+    )
+    
+    # Save submission
+    submission_df.to_csv(submission_path, index=False)
+
+    print(f"Submission saved to: {submission_path}")
+    print(f"File size: {submission_path.stat().st_size / 1024:.1f} KB")

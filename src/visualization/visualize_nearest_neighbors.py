@@ -190,4 +190,6 @@ def visualize_nearest_neighbors(
         y=0.98
     )
     
+    plt.show()
+    
     return fig, stats

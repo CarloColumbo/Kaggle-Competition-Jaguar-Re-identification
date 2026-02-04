@@ -12,7 +12,11 @@ class EmbeddingProjection(BaseModel):
     
     def __init__(self, input_dim=1536, hidden_dim=512, output_dim=256, dropout=0.3):
         super().__init__()
-        
+        self._input_dim = input_dim
+        self._hidden_dim = hidden_dim
+        self._output_dim = output_dim
+        self._dropout = dropout
+
         self.network = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.BatchNorm1d(hidden_dim),
@@ -41,3 +45,10 @@ class EmbeddingProjection(BaseModel):
         
     def get_embedding_size(self) -> int:
         return self._output_dim
+    
+    def print_model_summary(self):
+        print(f"Embedding Projection:")
+        print(f"  Input dim: {self._input_dim}")
+        print(f"  Hidden dim: {self._hidden_dim}")
+        print(f"  Output dim: {self._output_dim}")
+        print(f"  Dropout: {self._dropout}")

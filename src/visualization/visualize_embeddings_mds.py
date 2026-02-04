@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.manifold import MDS
+import wandb
 
 
 def compute_geodesic_distances(embeddings: np.ndarray) -> np.ndarray:
@@ -30,6 +31,7 @@ def visualize_embeddings_mds(
     title: str,
     seed: int = 42,
     max_samples: int = 500,
+    log_name: str = None
 ) -> plt.Figure:
     """
     Visualize embeddings using MDS with geodesic distances.
@@ -37,7 +39,9 @@ def visualize_embeddings_mds(
         embeddings (np.ndarray): Array of shape (n_samples, n_features) containing the embeddings.
         labels (np.ndarray): Array of shape (n_samples,) containing the identity labels.
         title (str): Title for the plot.
+        seed (int, optional): Random seed for MDS. Defaults to 42.
         max_samples (int, optional): Maximum number of samples to visualize. Defaults to 500.
+        log_name (str, optional): Name for logging the figure to W&B. Defaults to None.
     Returns:
         plt.Figure: Matplotlib figure containing the MDS plot.
     """
@@ -80,5 +84,10 @@ def visualize_embeddings_mds(
     # Legend outside plot
     ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=8)
     plt.tight_layout()
-    
+
+    plt.show()
+
+    if log_name:
+        wandb.log({log_name: wandb.Image(fig)})
+
     return fig

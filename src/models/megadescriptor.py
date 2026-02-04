@@ -12,7 +12,7 @@ class MegaDescriptorL384(BaseModel):
     Uses a pre-trained MegaDescriptor backbone.
     """
     
-    def __init__(self, config, device):
+    def __init__(self):
         super().__init__()
         
         self.megadescriptor = timm.create_model(
@@ -20,7 +20,7 @@ class MegaDescriptorL384(BaseModel):
             pretrained=True
         )
         self.megadescriptor.eval()
-        self.megadescriptor.to(device)
+        self.megadescriptor
         
         # MegaDescriptor expects 384x384 images normalized with ImageNet statistics
         self._preprocess = transforms.Compose([
@@ -31,6 +31,10 @@ class MegaDescriptorL384(BaseModel):
                 std=[0.229, 0.224, 0.225]
             ),
         ])
+        
+    def to(self, device):
+        self.megadescriptor.to(device)
+        return self
         
     def forward(self, x):
         return self.megadescriptor(x)

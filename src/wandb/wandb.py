@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 
-def log_train_val_distribution(train_data: pd.DataFrame, val_data: pd.DataFrame, train_counts: pd.Series, val_counts: pd.Series, fig):
+def log_train_val_distribution(train_data: pd.DataFrame, val_data: pd.DataFrame, train_counts: pd.Series, val_counts: pd.Series):
     """
     Log the training and validation identity distribution to W&B.
     Args:
@@ -11,7 +11,6 @@ def log_train_val_distribution(train_data: pd.DataFrame, val_data: pd.DataFrame,
         val_data (pd.DataFrame): Validation dataset DataFrame.
         train_counts (pd.Series): Series with counts of images per identity in the training set.
         val_counts (pd.Series): Series with counts of images per identity in the validation set.
-        fig: Matplotlib figure object containing the visualization.
     """
     num_classes = len(train_counts)
 
@@ -32,8 +31,6 @@ def log_train_val_distribution(train_data: pd.DataFrame, val_data: pd.DataFrame,
         "train_samples_per_identity": wandb.Histogram(train_counts.values),
         "val_samples_per_identity": wandb.Histogram(val_counts.values),
     })
-    
-    wandb.log({"train_val_distribution": wandb.Image(fig)})
 
     print(f"\nLogged identity distributions to W&B")
     print(f"  Train samples per identity: {train_counts.min()} - {train_counts.max()} (mean: {train_counts.mean():.1f})")

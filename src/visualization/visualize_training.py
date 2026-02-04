@@ -1,11 +1,16 @@
 import matplotlib.pyplot as plt
+import wandb
 
 
-def visualize_training_history(history: dict, checkpoint_path: str, best_epoch: int):
+def visualize_training_history(history: dict, checkpoint_path: str, best_epoch: int, log: bool = False):
     """
     Visualizes training and validation loss and accuracy over epochs.
     Args:
         history (dict): Dictionary containing 'train_loss', 'val_loss', 'train_acc', 'val_acc'
+                        and 'val_map' lists.
+        checkpoint_path (str): Path to save the visualization figure.
+        best_epoch (int): Epoch number corresponding to the best validation performance.
+        log (bool): Whether to log the figure to W&B. Default is False.
     Returns:
         fig: Matplotlib figure object containing the visualization.
     """
@@ -44,6 +49,9 @@ def visualize_training_history(history: dict, checkpoint_path: str, best_epoch: 
     plt.tight_layout()
     plt.savefig(checkpoint_path, dpi=150, bbox_inches='tight')
     plt.show()
+    
+    if log:
+        wandb.log({"training_curves": wandb.Image(fig)})
     
     return fig
     

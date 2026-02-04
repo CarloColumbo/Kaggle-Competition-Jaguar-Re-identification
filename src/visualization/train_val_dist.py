@@ -1,14 +1,16 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import wandb
 
 
-def visualize_train_val_distribution(train_counts: pd.Series, val_counts: pd.Series):
+def visualize_train_val_distribution(train_counts: pd.Series, val_counts: pd.Series, log: bool = True) -> plt.Figure:
     """
     Visualizes the distribution of images per identity in the training and validation sets.
     Args:
         train_counts (pd.Series): Series with counts of images per identity in the training set.
         val_counts (pd.Series): Series with counts of images per identity in the validation set.
+        log (bool): Whether to log the figure to W&B. Default is True.
     Returns:
         fig: Matplotlib figure object containing the visualization.
     """
@@ -26,5 +28,8 @@ def visualize_train_val_distribution(train_counts: pd.Series, val_counts: pd.Ser
     plt.tight_layout()
 
     plt.show()
+    
+    if log:
+        wandb.log({"train_val_distribution": wandb.Image(fig)})
     
     return fig
