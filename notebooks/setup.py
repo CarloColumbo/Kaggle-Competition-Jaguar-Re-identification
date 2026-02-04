@@ -14,7 +14,7 @@ class Env:
     CHECKPOINT_PATH: Path
     
     
-    def __init__(self):
+    def __init__(self, experiment_name: str = "default_experiment"):
         if self._is_kaggle():
             self._load_kaggle_env()
         else:
@@ -23,11 +23,11 @@ class Env:
         sys.path.insert(0, str(self.PROJECT_PATH))
             
         self.DATA_PATH = self.PROJECT_PATH / "data"
-        self.OUTPUT_PATH = self.PROJECT_PATH / "output"
-        self.CHECKPOINT_PATH = self.PROJECT_PATH / "checkpoints"
+        self.OUTPUT_PATH = self.PROJECT_PATH / "output" / experiment_name
+        self.CHECKPOINT_PATH = self.PROJECT_PATH / "checkpoints" / experiment_name
         
-        os.mkdir(self.OUTPUT_PATH, exist_ok=True)
-        os.mkdir(self.CHECKPOINT_PATH, exist_ok=True)
+        self.OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
+        self.CHECKPOINT_PATH.mkdir(parents=True, exist_ok=True)
 
         print(f"Environment loaded. Project path: {self.PROJECT_PATH}")
 
