@@ -26,3 +26,19 @@ For local development, copy `.env.sample` to `.env` and populate it with the app
 ### Kaggle
 
 For Kaggle, `setup.py` must be added as a requirement input. It will clone our GitHub repository and update the project path accordingly. Please note that all variables defined in `.env.sample` must be configured as Kaggle secrets.
+
+### Experiments
+- Domain Understanding:
+    - Image dataset analysis, Embedding analysis
+- Hyperparameter Optimization
+    - Megadescriptor + Arc Face Loss with sweeps
+- Model Architecture
+    - Foundation models comparision: MegaDescriptor, DINOv3, ConvNeXt v2, Swin Transformers
+    - Compare loss functions: ArcFace, Triplet Loss, combined losses
+- Data & Training
+    - Data augmentation (geometric, color, Cutout, MixUp, CutMix) + Test-time augmentation (TTA)
+    - Classical Approaches: HotSpotter algorithm
+
+
+
+- maybe to more than this
