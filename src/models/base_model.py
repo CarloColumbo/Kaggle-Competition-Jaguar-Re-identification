@@ -14,6 +14,16 @@ class BaseModel(nn.Module, ABC):
     """
     def __init__(self):
         super().__init__()
+        
+    def get_embeddings(self, x):
+        """
+        Forward pass to get embeddings from input data.
+        Args:
+            x (torch.Tensor): Input tensor.
+        Returns:
+            torch.Tensor: Output embeddings.
+        """
+        return self.forward(x)
 
     @abstractmethod
     def get_embedding_size(self) -> int:
@@ -28,13 +38,6 @@ class BaseModel(nn.Module, ABC):
         We also count non-trainable parameters.
         """
         return sum(p.numel() for p in self.parameters())
-        
-    def preprocess(self, x):
-        """
-        Preprocess input data before feeding it to the model.
-        By default, this is a no-op and should be overridden by subclasses if needed.
-        """
-        return x
         
     def print_model_summary(self) -> None:
         """

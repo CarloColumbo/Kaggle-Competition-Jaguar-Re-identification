@@ -22,16 +22,6 @@ class MegaDescriptorL384(BaseModel):
         self.megadescriptor.eval()
         self.megadescriptor
         
-        # MegaDescriptor expects 384x384 images normalized with ImageNet statistics
-        self._preprocess = transforms.Compose([
-            transforms.Resize((384, 384)),
-            transforms.ToTensor(),
-            transforms.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225]
-            ),
-        ])
-        
     def to(self, device):
         self.megadescriptor.to(device)
         return self
@@ -41,9 +31,6 @@ class MegaDescriptorL384(BaseModel):
 
     def get_embedding_size(self) -> int:
         return 1536
-        
-    def preprocess(self, x):
-        return self._preprocess(x)
     
     @staticmethod
     def get_model_name() -> str:
