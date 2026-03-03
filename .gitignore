@@ -210,3 +210,4 @@ data/
 notebooks/wandb/
 # Exclude model checkpoints
 *.pth
+*.npz
