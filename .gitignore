@@ -211,3 +211,5 @@ notebooks/wandb/
 # Exclude model checkpoints
 *.pth
 *.npz
+
+output/augmentation/train_augmented
