@@ -1,15 +1,12 @@
-import torch
-import torch.nn as nn
-
-from src.models.base_model import BaseModel
+from torch import nn
 
 
-class EmbeddingProjection(BaseModel):
+class EmbeddingProjection(nn.Module):
     """
     Projects embeddings to a lower-dimensional space.
     Architecture: input_dim -> hidden_dim -> output_dim
     """
-    
+
     def __init__(self, input_dim=1536, hidden_dim=512, output_dim=256, dropout=0.3):
         super().__init__()
         self._input_dim = input_dim
@@ -22,14 +19,13 @@ class EmbeddingProjection(BaseModel):
             nn.BatchNorm1d(hidden_dim),
             nn.ReLU(inplace=True),
             nn.Dropout(dropout),
-            
+
             nn.Linear(hidden_dim, output_dim),
             nn.BatchNorm1d(output_dim),
         )
-        self._output_dim = output_dim
-        
+
         self._init_weights()
-    
+
     def _init_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Linear):
@@ -39,12 +35,9 @@ class EmbeddingProjection(BaseModel):
             elif isinstance(m, nn.BatchNorm1d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
-    
+
     def forward(self, x):
         return self.network(x)
-        
-    def get_embedding_size(self) -> int:
-        return self._output_dim
     
     def print_model_summary(self):
         print(f"Embedding Projection:")
@@ -52,3 +45,4 @@ class EmbeddingProjection(BaseModel):
         print(f"  Hidden dim: {self._hidden_dim}")
         print(f"  Output dim: {self._output_dim}")
         print(f"  Dropout: {self._dropout}")
+        print(f"  Total parameters: {sum(p.numel() for p in self.parameters() if p.requires_grad)}")
