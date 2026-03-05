@@ -1,13 +1,10 @@
 import os
 
-os.environ['PYTHONHASHSEED'] = str(51)
-os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
-
 import random
 import numpy as np
 import torch
-import pickle
-from pathlib import Path
+import cv2
+import albumentations as A
 
 
 def set_seeds(seed=51):
@@ -38,6 +35,16 @@ def set_seeds(seed=51):
         # CUDA deterministic operations
         torch.backends.cudnn.deterministic = True
         torch.backends.cudnn.benchmark = False
+        
+    # OpenCV
+    cv2.setRNGSeed(seed)
+    
+    # Albumentations (for data augmentation)
+    try:
+        A.seed_everything(seed)
+    except AttributeError:
+        # Older versions of albumentations
+        pass
 
     # PyTorch deterministic algorithms (may impact performance)
     try:
@@ -49,7 +56,7 @@ def set_seeds(seed=51):
     print(f"All random seeds set to {seed} for reproducibility")
     
 
-def create_deterministic_training_dataloader(dataset, batch_size, shuffle=True, **kwargs):
+def create_deterministic_training_dataloader(dataset, batch_size, shuffle=True, seed=51, **kwargs):
     """
     Create a DataLoader with deterministic behavior.
 
@@ -64,7 +71,7 @@ def create_deterministic_training_dataloader(dataset, batch_size, shuffle=True, 
     """
     # Use a generator with fixed seed for reproducible shuffling
     generator = torch.Generator()
-    generator.manual_seed(51)
+    generator.manual_seed(seed)
 
     return torch.utils.data.DataLoader(
         dataset,

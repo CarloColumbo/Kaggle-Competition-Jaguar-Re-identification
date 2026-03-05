@@ -11,6 +11,8 @@ class EmbeddingDataset(Dataset):
     def __init__(self, embeddings: np.ndarray, labels: np.ndarray):
         self.embeddings = torch.FloatTensor(embeddings)
         self.labels = torch.LongTensor(labels)
+        
+        assert len(self.embeddings) == len(self.labels), "Embeddings and labels must have the same length"
     
     def __len__(self):
         return len(self.labels)
