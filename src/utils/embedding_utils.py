@@ -9,13 +9,13 @@ from torchvision import transforms
 from src.models import BaseModel
 
 
-def extract_embeddings(model, data_loader, desc="Extracting embeddings"):
+def extract_embeddings(model, data_loader, device, desc="Extracting embeddings"):
     """Extract embeddings for a batch of images."""
     model.eval()
     embeddings = []
 
     for batch in tqdm(data_loader, desc=desc):
-        batch = batch.to(model.device)
+        batch = batch.to(device)
         with torch.no_grad():
             emb = model(batch)
         embeddings.append(emb.cpu().numpy())
@@ -38,7 +38,7 @@ def _load_cached_embeddings(cache_path, expected_filenames):
     return np.stack([cached_embeddings[idx[fn]] for fn in expected_filenames], axis=0)
     
     
-def get_embeddings(model, cache_path, data_loader, filenames):
+def get_embeddings(model, cache_path, data_loader, filenames, device):
     embeddings = None
     if cache_path.exists():
         embeddings = _load_cached_embeddings(cache_path, filenames)
@@ -50,7 +50,8 @@ def get_embeddings(model, cache_path, data_loader, filenames):
         print(f"Extracting embeddings for {len(data_loader)} images...")
         embeddings = extract_embeddings(
             model,
-            data_loader
+            data_loader,
+            device=device,
         )
         np.savez_compressed(
             cache_path,

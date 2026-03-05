@@ -1,4 +1,4 @@
-import torch.nn as nn
+from torch import nn
 
 
 class EmbeddingProjection(nn.Module):
@@ -6,22 +6,26 @@ class EmbeddingProjection(nn.Module):
     Projects embeddings to a lower-dimensional space.
     Architecture: input_dim -> hidden_dim -> output_dim
     """
-    
+
     def __init__(self, input_dim=1536, hidden_dim=512, output_dim=256, dropout=0.3):
         super().__init__()
-        
+        self._input_dim = input_dim
+        self._hidden_dim = hidden_dim
+        self._output_dim = output_dim
+        self._dropout = dropout
+
         self.network = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.BatchNorm1d(hidden_dim),
             nn.ReLU(inplace=True),
             nn.Dropout(dropout),
-            
+
             nn.Linear(hidden_dim, output_dim),
             nn.BatchNorm1d(output_dim),
         )
-        
+
         self._init_weights()
-    
+
     def _init_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Linear):
