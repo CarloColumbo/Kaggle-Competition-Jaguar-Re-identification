@@ -18,11 +18,10 @@ def plot_history(history, best_epoch):
     axes[0].grid(True, alpha=0.3)
     
     # LR
-    axes[1].plot(epochs_range, history['lr'], 'b-', label='Train')
+    axes[1].plot(epochs_range, history['lr'], 'b-')
     axes[1].set_xlabel('Epoch')
     axes[1].set_ylabel('Learning Rate')
     axes[1].set_title('Learning Rate Schedule')
-    axes[1].legend()
     axes[1].grid(True, alpha=0.3)
 
     # mAP
