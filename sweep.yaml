@@ -1,0 +1,45 @@
+method: bayes
+
+metric:
+  name: val_recall_at_1
+  goal: maximize
+
+parameters:
+
+  init_learning_rate:
+    distribution: log_uniform
+    min: 1e-4
+    max: 1e-2
+
+  weight_decay:
+    distribution: log_uniform
+    min: 1e-6
+    max: 1e-3
+
+  embedding_dim:
+    values: [128, 256, 384, 512]
+
+  hidden_dim:
+    values: [256, 512, 768, 1024]
+
+  dropout:
+    values: [0.0, 0.1, 0.2, 0.3, 0.4]
+
+  proxyanchor_margin:
+    values: [0.05, 0.1, 0.15, 0.2, 0.3]
+
+  proxyanchor_alpha:
+    values: [16, 32, 48, 64]
+
+  proxyanchor_lambda:
+    distribution: log_uniform
+    min: 1e-5
+    max: 5e-2
+
+  batch_size:
+    values: [32, 64, 128]
+
+  eta_min:
+    distribution: log_uniform
+    min: 1e-6
+    max: 1e-4
