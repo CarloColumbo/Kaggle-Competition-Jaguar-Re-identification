@@ -1,16 +1,9 @@
 import numpy as np
-import pandas as pd
 import torch
-import torch.nn as nn
-from typing import Optional, Tuple, Any, List, Callable
 import wandb
-import time
 from tqdm import tqdm
-from pathlib import Path
 from sklearn.metrics.pairwise import cosine_similarity
 import torch.nn.functional as F
-
-from src.models import BaseModel
 
 
 def compute_validation_map(model, val_loader, device):
@@ -84,7 +77,7 @@ def compute_validation_map(model, val_loader, device):
     return balanced_map
 
 
-def train_epoch(model, loader, criterion, optimizer, device):
+def train_epoch(model, loader, criterion, optimizer, scheduler, device):
     """Train for one epoch."""
     model.train()
     total_loss = 0
@@ -102,6 +95,10 @@ def train_epoch(model, loader, criterion, optimizer, device):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        
+        # If OneCycleLR, step per batch
+        if isinstance(scheduler, torch.optim.lr_scheduler.OneCycleLR):
+            scheduler.step()
         
         # Metrics
         total_loss += loss.item()
@@ -168,7 +165,7 @@ def train_loop(
         print(f"\nEpoch {epoch+1}/{num_epochs}")
         
         # Train
-        train_loss = train_epoch(model, train_loader, criterion, optimizer, device)
+        train_loss = train_epoch(model, train_loader, criterion, optimizer, scheduler, device)
         
         # Validate
         val_loss = validate_epoch(model, val_loader, criterion, device)
@@ -181,7 +178,10 @@ def train_loop(
         )
         
         # Update scheduler
-        scheduler.step(val_loss)
+        if isinstance(scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
+            scheduler.step(val_loss)
+        else:
+            scheduler.step()
         current_lr = optimizer.param_groups[0]['lr']
         
         # Store history
