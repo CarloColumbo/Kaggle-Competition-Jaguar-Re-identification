@@ -178,10 +178,11 @@ def train_loop(
         )
         
         # Update scheduler
-        if isinstance(scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
-            scheduler.step(val_loss)
-        else:
-            scheduler.step()
+        if not isinstance(scheduler, torch.optim.lr_scheduler.OneCycleLR):
+            if isinstance(scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
+                scheduler.step(val_loss)
+            else:
+                scheduler.step()
         current_lr = optimizer.param_groups[0]['lr']
         
         # Store history
