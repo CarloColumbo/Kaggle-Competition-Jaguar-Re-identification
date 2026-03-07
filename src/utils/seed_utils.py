@@ -7,7 +7,7 @@ import cv2
 import albumentations as A
 
 
-def set_seeds(seed=51):
+def set_seeds(seed=51, silent=False):
     """
     Set seeds for complete reproducibility across all libraries and operations.
 
@@ -51,10 +51,12 @@ def set_seeds(seed=51):
         torch.use_deterministic_algorithms(True)
     except RuntimeError:
         # Some operations don't have deterministic implementations
-        print("Warning: Some operations may not be deterministic")
+        if not silent:
+            print("Warning: Some operations may not be deterministic")
 
-    print(f"All random seeds set to {seed} for reproducibility")
-    
+    if not silent:
+        print(f"All random seeds set to {seed} for reproducibility")
+
 
 def create_deterministic_training_dataloader(dataset, batch_size, shuffle=True, seed=51, **kwargs):
     """

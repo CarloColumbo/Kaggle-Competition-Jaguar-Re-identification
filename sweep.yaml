@@ -1,7 +1,7 @@
 method: bayes
 
 metric:
-  name: val_recall_at_1
+  name: final_val_mAP
   goal: maximize
 
 parameters:
@@ -43,3 +43,17 @@ parameters:
     distribution: log_uniform
     min: 1e-6
     max: 1e-4
+    
+  # Constants
+  dinov3_model: 
+    value: "hf-hub:timm/vit_base_patch16_dinov3.lvd1689m"
+  num_epochs:
+    value: 200
+  patience:
+    value: 10
+  val_split:
+    value: 0.2
+  seed:
+    value: 66
+  max_num_runs:
+    value: 5
