@@ -7,12 +7,12 @@ metric:
 parameters:
 
   init_learning_rate:
-    distribution: log_uniform
+    distribution: log_uniform_values
     min: 1e-4
     max: 1e-2
 
   weight_decay:
-    distribution: log_uniform
+    distribution: log_uniform_values
     min: 1e-6
     max: 1e-3
 
@@ -32,7 +32,7 @@ parameters:
     values: [16, 32, 48, 64]
 
   proxyanchor_lambda:
-    distribution: log_uniform
+    distribution: log_uniform_values
     min: 1e-5
     max: 5e-2
 
@@ -40,7 +40,7 @@ parameters:
     values: [32, 64, 128]
 
   eta_min:
-    distribution: log_uniform
+    distribution: log_uniform_values
     min: 1e-6
     max: 1e-4
     

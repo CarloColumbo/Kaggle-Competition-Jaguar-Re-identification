@@ -146,6 +146,7 @@ def train_loop(
         num_epochs,
         patience,
         classes,
+        silent=False
     ):
         
     history = {
@@ -158,12 +159,14 @@ def train_loop(
     patience_counter = 0
     best_epoch = 0
 
-    print(f"Starting training for {num_epochs} epochs...")
-    print("=" * 70)
+    if not silent:
+        print(f"Starting training for {num_epochs} epochs...")
+        print("=" * 70)
 
     for epoch in range(num_epochs):
-        print(f"\nEpoch {epoch+1}/{num_epochs}")
-        
+        if not silent:
+            print(f"\nEpoch {epoch+1}/{num_epochs}")
+
         # Train
         train_loss = train_epoch(model, train_loader, criterion, optimizer, scheduler, device)
         
@@ -202,10 +205,11 @@ def train_loop(
         })
         
         # Print summary
-        print(f"  Train Loss: {train_loss:.4f}")
-        print(f"  Val Loss:   {val_loss:.4f}")
-        print(f"  Val mAP:    {val_map:.4f} | LR: {current_lr:.2e}")
-        
+        if not silent:
+            print(f"  Train Loss: {train_loss:.4f}")
+            print(f"  Val Loss:   {val_loss:.4f}")
+            print(f"  Val mAP:    {val_map:.4f} | LR: {current_lr:.2e}")
+
         # Checkpoint best model
         if val_map > best_val_map:
             best_val_map = val_map
@@ -224,19 +228,23 @@ def train_loop(
                 'num_classes': len(classes),
                 'name': name
             }, checkpoint_path)
-            
-            print(f"  [New best model saved]")
+
+            if not silent:
+                print(f"  [New best model saved]")
         else:
             patience_counter += 1
-            print(f"  No improvement. Patience: {patience_counter}/{patience}")
+            if not silent:
+                print(f"  No improvement. Patience: {patience_counter}/{patience}")
 
         # Early stopping
         if patience_counter >= patience:
-            print(f"\nEarly stopping triggered after {epoch+1} epochs")
+            if not silent:
+                print(f"\nEarly stopping triggered after {epoch+1} epochs")
             break
 
-    print("\n" + "=" * 70)
-    print(f"Training complete!")
-    print(f"Best epoch: {best_epoch}, Val mAP: {best_val_map:.4f}")
+    if not silent:
+        print("\n" + "=" * 70)
+        print(f"Training complete!")
+        print(f"Best epoch: {best_epoch}, Val mAP: {best_val_map:.4f}")
 
     return history, best_val_map, best_epoch
