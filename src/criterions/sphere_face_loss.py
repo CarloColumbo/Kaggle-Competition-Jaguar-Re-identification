@@ -7,14 +7,23 @@ import torch.nn.functional as F
 
 class SphereFaceLoss(nn.Module):
     """
-    SphereFace / A-Softmax Loss
+    SphereFace / A-Softmax Loss implementation.
 
-    Paper:
-    SphereFace: Deep Hypersphere Embedding for Face Recognition
-    https://arxiv.org/abs/1704.08063
+    This loss applies an angular margin to the logits for better class separation.
 
-    L = -log( exp(s * cos(m * theta_y)) /
-              (exp(s * cos(m * theta_y)) + sum_j exp(s * cos(theta_j))) )
+    The loss is computed as:
+        L = -log(exp(s * cos(m * theta_y)) / (exp(s * cos(m * theta_y)) + sum(exp(s * cos(theta_j))))
+
+    where:
+        - theta_y is the angle between embedding and ground truth class center
+        - m is the angular margin (integer >= 1)
+        - s is the feature scale (default 64)
+
+    Args:
+        embedding_dim (int): Dimension of the embedding space.
+        num_classes (int): Number of classes.
+        margin (int): Angular margin. Default is 4.
+        scale (float): Feature scale. Default is 64.0.
     """
 
     def __init__(self, embedding_dim, num_classes, margin=4, scale=64.0):

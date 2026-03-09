@@ -4,6 +4,27 @@ import torch.nn.functional as F
 
 
 class SubCenterArcFaceLoss(nn.Module):
+    """
+    Sub-Center ArcFace Loss implementation.
+
+    This loss extends ArcFace by introducing multiple sub-centers per class to handle intra-class variance.
+
+    The loss is computed as:
+        L = -log(exp(s * cos(theta_y + m)) / (exp(s * cos(theta_y + m)) + sum(exp(s * cos(theta_j))))
+
+    where:
+        - theta_y is the angle between embedding and ground truth class center
+        - m is the angular margin (default 0.5 radians, about 28.6 degrees)
+        - s is the feature scale (default 30)
+        - k is the number of sub-centers per class
+
+    Args:
+        num_classes (int): Number of classes.
+        embedding_dim (int): Dimension of the embedding space.
+        k (int): Number of sub-centers per class. Default is 3.
+        scale (float): Feature scale. Default is 30.0.
+        margin (float): Angular margin. Default is 0.50.
+    """
     def __init__(self, num_classes, embedding_dim, k=3, scale=30.0, margin=0.50):
         super().__init__()
         self.scale = scale

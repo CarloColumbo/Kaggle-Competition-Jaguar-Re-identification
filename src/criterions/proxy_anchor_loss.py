@@ -4,6 +4,25 @@ import torch.nn.functional as F
 
 
 class ProxyAnchorLoss(nn.Module):
+    """
+    Proxy Anchor Loss implementation.
+
+    This loss uses class proxies to compute the loss for each sample in the batch.
+
+    The loss is computed as:
+        L = log(1 + sum(exp(-alpha * (sim - margin)))) + log(1 + sum(exp(alpha * (sim + margin))))
+
+    where:
+        - sim is the cosine similarity between features and proxies
+        - alpha is a scaling factor
+        - margin is a margin applied to the similarity scores
+
+    Args:
+        num_classes (int): Number of classes.
+        embedding_dim (int): Dimension of the embedding space.
+        margin (float): Margin for similarity scores. Default is 0.1.
+        alpha (float): Scaling factor. Default is 32.
+    """
     def __init__(self, num_classes, embedding_dim, margin=0.1, alpha=32):
         super().__init__()
         self.proxies = nn.Parameter(torch.randn(num_classes, embedding_dim))

@@ -4,11 +4,35 @@ import torch.nn.functional as F
 
 
 class BatchHardTripletLoss(nn.Module):
+    """
+    Batch Hard Triplet Loss implementation.
+
+    This loss selects the hardest positive and hardest negative for each anchor in the batch to compute the triplet loss.
+
+    The loss is computed as:
+        L = max(0, d(a, p) - d(a, n) + margin)
+
+    where:
+        - d(a, p) is the distance between the anchor and the hardest positive
+        - d(a, n) is the distance between the anchor and the hardest negative
+        - margin is a hyperparameter that enforces a minimum separation between positive and negative pairs
+
+    Args:
+        margin (float): Margin for triplet loss. Default is 0.3.
+    """
     def __init__(self, margin=0.3):
         super().__init__()
         self.margin = margin
 
     def forward(self, features, labels):
+        """
+        Args:
+            features: (batch_size, embedding_dim) - feature embeddings of the batch
+            labels: (batch_size,) - class labels for each embedding
+
+        Returns:
+            loss: scalar - Batch Hard Triplet Loss
+        """
         features = F.normalize(features)
         dist = torch.cdist(features, features, p=2)
 

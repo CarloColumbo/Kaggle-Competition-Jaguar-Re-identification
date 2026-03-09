@@ -25,7 +25,7 @@ class ArcFaceLoss(nn.Module):
         self.margin = margin
         self.scale = scale
         
-        # Learnable weight matrix (class prototypes on the hypersphere)
+        # Learnable weight matrix
         self.weight = nn.Parameter(torch.FloatTensor(num_classes, embedding_dim))
         nn.init.xavier_uniform_(self.weight)
         
@@ -42,7 +42,7 @@ class ArcFaceLoss(nn.Module):
             labels: (batch_size,) - ground truth class indices
         
         Returns:
-            logits: (batch_size, num_classes) - ArcFace logits for cross-entropy loss
+            loss: scalar - ArcFace loss
         """
         # Normalize embeddings and weights to unit length
         embeddings = F.normalize(embeddings, p=2, dim=1)

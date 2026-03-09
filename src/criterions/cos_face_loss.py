@@ -7,16 +7,21 @@ import torch.nn.functional as F
 
 class CosFaceLoss(nn.Module):
     """
-    TODO: Implement
     CosFace (Additive Angular Margin Loss) layer.
 
     The loss is computed as:
         L = -log(exp(s * cos(theta_y + m)) / (exp(s * cos(theta_y + m)) + sum(exp(s * cos(theta_j)))))
-    
+
     where:
         - theta_y is the angle between embedding and ground truth class center
         - m is the angular margin (default 0.5 radians, about 28.6 degrees)
         - s is the feature scale (default 64)
+
+    Args:
+        embedding_dim (int): Dimension of the embedding space.
+        num_classes (int): Number of classes.
+        margin (float): Angular margin. Default is 0.5.
+        scale (float): Feature scale. Default is 64.0.
     """
     
     def __init__(self, embedding_dim, num_classes, margin=0.5, scale=64.0):
