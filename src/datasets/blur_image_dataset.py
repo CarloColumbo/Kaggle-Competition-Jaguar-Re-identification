@@ -5,12 +5,16 @@ from torch.utils.data import Dataset
 
 
 class BlurImageDataset(Dataset):
-    """PyTorch Dataset for images."""
+    """
+    PyTorch Dataset for images.
+    This dataset applies a Gaussian blur to the background (where alpha=0).
+    """
     
-    def __init__(self, filepaths, preprocess):
+    def __init__(self, filepaths, label=None, preprocess_fn=None):
         self.filepaths = filepaths
-        self.preprocess = preprocess
-        
+        self.labels = label
+        self.preprocess_fn = preprocess_fn
+
     def blur_background(self, img):
         img = np.array(img.convert("RGBA"))
 
@@ -34,4 +38,12 @@ class BlurImageDataset(Dataset):
     def __getitem__(self, idx):
         image = Image.open(self.filepaths[idx]).convert("RGBA")
         image = self.blur_background(image)
-        return self.preprocess(image)
+        
+        if self.preprocess_fn is not None:
+            image = self.preprocess_fn(image)
+            
+        if self.labels is None:
+            return image
+
+        label = self.labels[idx]
+        return image, label
