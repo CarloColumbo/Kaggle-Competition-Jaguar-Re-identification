@@ -1,9 +1,10 @@
 import numpy as np
-import torch
-import wandb
-from tqdm import tqdm
 from sklearn.metrics.pairwise import cosine_similarity
+import torch
+from torch import nn
 import torch.nn.functional as F
+from tqdm import tqdm
+import wandb
 
 
 def compute_validation_map(model, val_loader, device):
@@ -77,8 +78,28 @@ def compute_validation_map(model, val_loader, device):
     return balanced_map
 
 
-def train_epoch(model, loader, criterion, optimizer, scheduler, device):
-    """Train for one epoch."""
+def train_epoch(
+        model: nn.Module,
+        loader: torch.utils.data.DataLoader,
+        criterion: nn.Module,
+        optimizer: torch.optim.Optimizer,
+        scheduler: torch.optim.lr_scheduler._LRScheduler,
+        device: torch.device
+    ):
+    """
+    Train for one epoch.
+    
+    Args:
+        model (nn.Model): the neural network model to train
+        loader (DataLoader): training data loader
+        criterion (nn.Module): loss function
+        optimizer (Optimizer): optimizer for updating model parameters
+        scheduler (LRScheduler): learning rate scheduler to update learning rate
+        device (torch.device): device to run training on
+    
+    Returns:
+        avg_loss (float): average training loss for the epoch
+    """
     model.train()
     total_loss = 0
     total = 0
@@ -110,8 +131,24 @@ def train_epoch(model, loader, criterion, optimizer, scheduler, device):
     return avg_loss
 
 
-def validate_epoch(model, loader, criterion, device):
-    """Validate for one epoch."""
+def validate_epoch(
+        model: nn.Module,
+        loader: torch.utils.data.DataLoader,
+        criterion: nn.Module,
+        device: torch.device
+    ):
+    """
+    Validate for one epoch.
+    
+    Args:
+        model (nn.Model): the neural network model to validate
+        loader (DataLoader): validation data loader
+        criterion (nn.Module): loss function
+        device (torch.device): device to run validation on
+        
+    Returns:
+        avg_loss (float): average validation loss for the epoch
+    """
     model.eval()
     total_loss = 0
     total = 0
@@ -134,21 +171,40 @@ def validate_epoch(model, loader, criterion, device):
     
 
 def train_loop(
-        model,
-        train_loader,
-        val_loader,
-        criterion,
-        optimizer,
-        scheduler,
-        device,
-        name,
-        checkpoint_path,
-        num_epochs,
-        patience,
-        classes,
-        silent=False
+        model: nn.Module,
+        train_loader: torch.utils.data.DataLoader,
+        val_loader: torch.utils.data.DataLoader,
+        criterion: nn.Module,
+        optimizer: torch.optim.Optimizer,
+        scheduler: torch.optim.lr_scheduler._LRScheduler,
+        device: torch.device,
+        name: str,
+        checkpoint_path: str,
+        num_epochs: int,
+        patience: int,
+        classes: list,
+        silent: bool=False
     ):
-        
+    """
+    Train the model with early stopping and checkpointing.
+    Uses wandb logging.
+    
+    Args:
+        model (nn.Module): the neural network model to train
+        train_loader (DataLoader): training data loader
+        val_loader (DataLoader): validation data loader
+        criterion (nn.Module): loss function
+        optimizer (Optimizer): optimizer for updating model parameters
+        scheduler (LRScheduler): learning rate scheduler
+        device (torch.device): device to run training
+        name (str): name for logging and checkpointing
+        checkpoint_path (str): path to save the best model checkpoint
+        num_epochs (int): maximum number of epochs to train
+        patience (int): number of epochs to wait for improvement before early stopping
+        classes (list): list of class labels for the dataset
+        silent (bool): if True, suppress training logs (except final summary)
+    """
+
     history = {
         'train_loss': [], 'train_acc': [],
         'val_loss': [], 'val_acc': [],
