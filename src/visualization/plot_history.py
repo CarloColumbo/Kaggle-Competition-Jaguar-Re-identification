@@ -2,6 +2,16 @@ import matplotlib.pyplot as plt
 
 
 def plot_history(history, best_epoch):
+    """
+    Plot training curves for loss, learning rate, and validation mAP.
+    
+    Args:
+        history: A dictionary containing 'train_loss', 'val_loss', 'lr', and 'val_map' lists for each epoch.
+        best_epoch: The epoch number corresponding to the best validation mAP (identity-balanced).
+
+    Returns:
+        A matplotlib figure containing the training curves.
+    """
     # Plot training curves
     fig, axes = plt.subplots(1, 3, figsize=(15, 4))
 

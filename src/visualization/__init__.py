@@ -1,6 +1,3 @@
-from .identity_dist import visualize_identity_distribution
-from .train_val_dist import visualize_train_val_distribution
+from .plot_history import plot_history
 from .visualize_embeddings_mds import visualize_embeddings_mds
 from .visualize_nearest_neighbors import visualize_nearest_neighbors
-from .visualize_training import visualize_training_history
-from .plot_history import plot_history
