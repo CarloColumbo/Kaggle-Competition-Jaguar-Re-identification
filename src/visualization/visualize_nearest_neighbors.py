@@ -10,7 +10,6 @@ def visualize_nearest_neighbors(
     image_paths,
     labels,
     k=5,
-    title_prefix="Validation"
 ):
     """
     Visualize the k nearest neighbors of a query image before and after fine-tuning.
@@ -22,7 +21,6 @@ def visualize_nearest_neighbors(
         image_paths: List of image file paths
         labels: Array of identity labels
         k: Number of nearest neighbors to show (default: 5)
-        title_prefix: Prefix for the plot title
     
     Returns:
         fig: Matplotlib figure
@@ -181,7 +179,7 @@ def visualize_nearest_neighbors(
     
     # Add title with statistics
     fig.suptitle(
-        f'{title_prefix}: Top-{k} Nearest Neighbors for Query "{query_label}"\n'
+        f'Top-{k} Nearest Neighbors for Query "{query_label}"\n'
         f'Correct Matches - Before: {stats["original_correct"]}/{k} | '
         f'After: {stats["finetuned_correct"]}/{k} | '
         f'Improvement: {"+" if stats["improvement"] >= 0 else ""}{stats["improvement"]}',
@@ -189,7 +187,5 @@ def visualize_nearest_neighbors(
         fontweight='bold',
         y=0.98
     )
-    
-    plt.show()
     
     return fig, stats
