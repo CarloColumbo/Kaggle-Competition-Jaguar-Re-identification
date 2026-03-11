@@ -10,6 +10,8 @@ def visualize_nearest_neighbors(
     image_paths,
     labels,
     k=5,
+    before_label='BEFORE\nFine-Tuning\n(MegaDescriptor)',
+    after_label='AFTER\nFine-Tuning\n(ArcFace)', 
 ):
     """
     Visualize the k nearest neighbors of a query image before and after fine-tuning.
@@ -169,11 +171,11 @@ def visualize_nearest_neighbors(
             spine.set_linewidth(3 if correct else 2)
     
     # Add row labels
-    fig.text(0.02, 0.75, 'BEFORE\nFine-Tuning\n(MegaDescriptor)', 
+    fig.text(0.02, 0.75, before_label, 
              fontsize=11, fontweight='bold', va='center', ha='center',
              bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
     
-    fig.text(0.02, 0.25, 'AFTER\nFine-Tuning\n(ArcFace)', 
+    fig.text(0.02, 0.25, after_label, 
              fontsize=11, fontweight='bold', va='center', ha='center',
              bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.5))
     
