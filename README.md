@@ -46,3 +46,4 @@ For Kaggle, `setup.py` must be added as a requirement input. It will clone our G
 ## TODO
 - Background run without parameter logging -> calculate it
 - explain change in model and training function
+- wrong naming of neighbour plot
