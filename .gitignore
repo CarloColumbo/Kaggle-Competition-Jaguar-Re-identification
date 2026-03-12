@@ -213,5 +213,5 @@ notebooks/wandb/
 *.npz
 
 output/augmentation/train_augmented
-output/balancing/augmented_data
-output/balancing/resized_images
+output/07_class_balancing/augmented_data
+output/07_class_balancing/resized_images
