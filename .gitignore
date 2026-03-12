@@ -215,3 +215,4 @@ notebooks/wandb/
 output/augmentation/train_augmented
 output/07_class_balancing/augmented_data
 output/07_class_balancing/resized_images
+output/08a_hyperparameter_sweep/augmented_data
