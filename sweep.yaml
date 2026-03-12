@@ -38,11 +38,6 @@ parameters:
 
   batch_size:
     values: [32, 64, 128]
-
-  eta_min:
-    distribution: log_uniform_values
-    min: 1e-6
-    max: 1e-4
     
   max_learning_rate:
     distribution: log_uniform_values
@@ -64,6 +59,6 @@ parameters:
   seed:
     value: 66
   max_num_runs:
-    value: 5
+    value: 60
   min_images_per_identity:
     value: 50
