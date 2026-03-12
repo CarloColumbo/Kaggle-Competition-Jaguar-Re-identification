@@ -65,3 +65,5 @@ parameters:
     value: 66
   max_num_runs:
     value: 5
+  min_images_per_identity:
+    value: 50
