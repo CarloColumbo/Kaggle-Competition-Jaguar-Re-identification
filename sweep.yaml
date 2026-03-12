@@ -8,8 +8,8 @@ parameters:
 
   init_learning_rate:
     distribution: log_uniform_values
-    min: 1e-4
-    max: 1e-2
+    min: 1e-6
+    max: 1e-3
 
   weight_decay:
     distribution: log_uniform_values
@@ -43,6 +43,14 @@ parameters:
     distribution: log_uniform_values
     min: 1e-6
     max: 1e-4
+    
+  max_learning_rate:
+    distribution: log_uniform_values
+    min: 1e-5
+    max: 1e-2
+    
+  pct_start:
+    values: [0.1, 0.2, 0.3, 0.4, 0.5]
     
   # Constants
   dinov3_model: 
