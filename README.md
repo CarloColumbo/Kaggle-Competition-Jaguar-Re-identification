@@ -28,7 +28,9 @@ Early in the project we made two structural changes to the baseline notebook:
 
 The full training implementation can be found in [Training Functions](src/training/training.py).
 
-Each experiment is detailed within the corresponding notebook. Summaries about the exploratory data analysis experiments and leaderboard experiments, can be found in the [Exploratory Data Analysis File](EDA_EXPERIMENTS.md) and [Leaderboard File](LEADERBOARD_EXPERIMENTS.md).
+Each experiment is detailed within the corresponding notebook. Summaries about the exploratory data analysis experiments and leaderboard experiments, can be found in the [Exploratory Data Analysis File](EDA_EXPERIMENTS.md) and [Leaderboard File](LEADERBOARD_EXPERIMENTS.md). 
+
+**Note:** These files only summarize how the components of the final model were chosen. For detailed interpretations and insights, please refer to the original experiment notebooks.
 
 
 ## Final Model
