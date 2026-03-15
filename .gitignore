@@ -218,4 +218,3 @@ output/07_class_balancing/resized_images
 output/08a_hyperparameter_sweep/augmented_data
 output/08b_hyperparameter_sweep/augmented_data
 output/09_reranking/augmented_data
-output/10_similarity_model/augmented_data
