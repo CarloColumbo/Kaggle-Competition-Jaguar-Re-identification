@@ -46,7 +46,7 @@ The final model configuration uses:
 - Scheduler: OneCycleLR
 - Training strategy: Augment samples to balance classes
 
-The exact hyperparameters are documented in the experiment notebooks. The model was trained on the training set, with random augmentations applied to underrepresented identities until each identity had at least 50 images. The final cosine distances were reranked using k-reciprocal reranking.
+The exact hyperparameters are documented in the experiment notebooks. The model was trained on the training set, with random augmentations applied to underrepresented identities until each identity had at least 50 images. Backgrounds of images were blurred using a Gaussian kernel. The final cosine distances were reranked using k-reciprocal reranking.
 
 The model achieved a best public score of 0.849 and a private score of 0.866.
 

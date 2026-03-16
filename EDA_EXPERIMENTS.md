@@ -65,7 +65,7 @@ The dataset shows a clear class imbalance:
 
 Such imbalance can reduce model performance for underrepresented individuals.
 
-This observation motivated later experiments with **class balancing strategies during training**, which are documented in [Leaderboard Experiments](LEADERBOARD_EXPERIMENTS.md).
+This observation motivated later experiments with **class balancing strategies during training**.
 
 
 ### Embedding Analysis
@@ -170,12 +170,45 @@ The public leaderboard score of **0.7** suggests that the intervention may have 
 - Seed 12: https://wandb.ai/karl-schuetz-hasso-plattner-institut/jaguar-reid-karl-matti-schuetz/runs/kl1e2tix?nw=nwuserkarlschuetz
 
 
+## Class Balance Intervention
+
+From our observation that the identity distribution is heavy-tailed, we inferred that the model likely performs worse on underrepresented identities because they appear less frequently in the training data. To address this issue, we conducted an experiment in [07_class_balance](notebooks/07_class_balance.ipynb) where we evaluated several interventions and their influence on the identity-based mAP on the validation set:
+
+1. **Baseline**
+2. **Weighted Sampling**
+3. **Generate Augmented Samples**
+4. **Weighted Sampling + Augmentation**
+
+For **Weighted Sampling** and **Weighted Sampling + Augmentation**, we used a sampler that assigns higher weights to underrepresented identities. For **Generated Augmented Samples** and **Weighted Sampling + Augmentation**, we added augmented versions of samples to increase dataset diversity. All interventions used the same training pipeline, with the only difference being the data loading strategy. The experiment used the setup and results previously established in Experiments 00-06.
+
+### Results
+| Strategy                         | Seed 2      | Seed 35      | Seed 78      | Mean mAP | Std (mAP) | Mean Epoch | Mean Training Time | Avg Position |
+| --------------------------------- | ----------- | ------------ | ------------ | -------- | --------- | ---------- | ------------------ | ------------ |
+| Baseline                          | 0.835335    | 0.873481     | 0.881857     | 0.863558 | 0.024798  | 91.7       | 147.083            | 3.3          |
+| Weighted Sampling                 | 0.83809     | 0.876663     | **0.889613** | 0.868122 | 0.026802  | 64.3       | 114.326            | 2.3          |
+| Generated Augmentations           | **0.85299** | **0.887964** | 0.87382      | **0.871591** | **0.017593**  | 49.3       | **100.050**        | **1.7**      |
+| Weighted Sampling + Augmentations | 0.847306    | 0.881851     | 0.828407     | 0.852521 | 0.027101  | 60.0       | 2393.55            | 3.7          |
+
+The interventions led only to small improvements in mAP. This suggests that the dataset may already be sufficiently diverse. However, a slight statistical improvement can still be observed.
+
+It is noteworthy that the difference between **Weighted Sampling** and **Generated Augmentations** is very small. Earlier analysis showed that many samples in the dataset are near-duplicates with only minor variations. This indicates that the dataset does not benefit from heavy augmentations but rather from small variations that help balance the distribution of images per identity.
+
+Based on these results, we proceeded with **Generated Augmentations** in subsequent experiments. Although this approach slightly improved mAP, it significantly increased execution time because embeddings had to be recomputed for every notebook run.
+
+The public submission score also indicates that **Generated Augmentations** are promising, achieving a score of 0.841.
+
+### Wandb runs
+- Seed 2: https://wandb.ai/karl-schuetz-hasso-plattner-institut/jaguar-reid-karl-matti-schuetz/runs/qjyl72kt?nw=nwuserkarlschuetz
+- Seed 35: https://wandb.ai/karl-schuetz-hasso-plattner-institut/jaguar-reid-karl-matti-schuetz/runs/2peqzcdb?nw=nwuserkarlschuetz
+- Seed 78: https://wandb.ai/karl-schuetz-hasso-plattner-institut/jaguar-reid-karl-matti-schuetz/runs/kczr92ii?nw=nwuserkarlschuetz
+
+
 # Key Findings
 
 The exploratory analysis revealed several important properties of the dataset:
 
 1. **Large background regions** are present in many images.
-2. **Identity distribution is highly imbalanced.**
+2. **Identity distribution is highly imbalanced** and balancing intervention can help improving the mAP.
 3. **Near-duplicate images are common.**
 4. **Background information influences embedding quality.**
 
